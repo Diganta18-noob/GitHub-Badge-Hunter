@@ -68,7 +68,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className="font-hanken antialiased bg-[#f7f9f6] text-[#16211a] min-h-screen flex flex-col transition-colors duration-200"
+        className="font-hanken antialiased bg-[var(--paper)] text-[var(--ink)] min-h-screen flex flex-col transition-colors duration-200"
       >
         <Providers>
           <Header />

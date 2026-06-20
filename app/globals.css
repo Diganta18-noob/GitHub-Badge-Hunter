@@ -44,11 +44,48 @@
     --accent-color: #1f6f4a;
     --accent2-color: #0f5c78;
   }
+
+  .dark {
+    /* dark theme variables */
+    --background: 146 20% 11%;          /* #16211a */
+    --foreground: 108 20% 97%;          /* #f7f9f6 */
+    
+    --card: 146 15% 15%;                /* #1d2b22 */
+    --card-foreground: 108 20% 97%;     /* #f7f9f6 */
+    
+    --popover: 146 15% 15%;             /* #1d2b22 */
+    --popover-foreground: 108 20% 97%;  /* #f7f9f6 */
+    
+    --primary: 108 20% 97%;             /* #f7f9f6 */
+    --primary-foreground: 146 20% 11%;  /* #16211a */
+    
+    --secondary: 146 12% 22%;           /* #28372e */
+    --secondary-foreground: 108 20% 97%;/* #f7f9f6 */
+    
+    --muted: 146 12% 22%;               /* #28372e */
+    --muted-foreground: 146 10% 64%;    /* #92a89c */
+    
+    --accent: 150 56% 38%;              /* #26895b */
+    --accent-foreground: 0 0% 100%;     /* #ffffff */
+    
+    --border: 108 20% 97%;              /* #f7f9f6 */
+    --input: 108 20% 97%;               /* #f7f9f6 */
+    --ring: 150 56% 38%;                /* #26895b */
+
+    /* Custom tokens */
+    --paper: #16211a;
+    --ink: #f7f9f6;
+    --soft: #92a89c;
+    --line: #2d3e33;
+    --cream: #212f26;
+    --accent-color: #26895b;
+    --accent2-color: #1b88a8;
+  }
 }
 
 @layer base {
   * {
-    @apply border-[#16211a];
+    @apply border-border;
   }
   body {
     background-color: var(--paper);
@@ -169,4 +206,82 @@
   text-transform: uppercase;
   color: var(--accent-color);
   font-weight: 700;
+}
+
+/* Dark Mode Utility Class Overrides */
+.dark * {
+  border-color: var(--line);
+}
+
+.dark [class*="border-[#16211a]"] {
+  border-color: var(--ink) !important;
+}
+
+.dark [class*="border-\[\#cbd8cf\]"] {
+  border-color: var(--line) !important;
+}
+
+.dark [class*="shadow-[3px_3px_0_#16211a]"] {
+  box-shadow: 3px 3px 0 var(--ink) !important;
+}
+
+.dark [class*="shadow-[2px_2px_0_#16211a]"] {
+  box-shadow: 2px 2px 0 var(--ink) !important;
+}
+
+.dark [class*="shadow-[0_4px_0_#16211a]"] {
+  box-shadow: 0 4px 0 var(--ink) !important;
+}
+
+.dark [class*="shadow-[0_2px_0_#16211a]"] {
+  box-shadow: 0 2px 0 var(--ink) !important;
+}
+
+.dark [class*="shadow-[4px_4px_0_#16211a]"] {
+  box-shadow: 4px 4px 0 var(--ink) !important;
+}
+
+.dark [class*="shadow-[6px_6px_0_#16211a]"] {
+  box-shadow: 6px 6px 0 var(--ink) !important;
+}
+
+/* Background Color Class Overrides */
+.dark .bg-white {
+  background-color: var(--card) !important;
+}
+
+.dark .bg-\[\#f7f9f6\] {
+  background-color: var(--paper) !important;
+}
+
+.dark .bg-\[\#eef4ec\] {
+  background-color: var(--cream) !important;
+}
+
+.dark .bg-\[\#fdfaf2\] {
+  background-color: #2b2210 !important;
+}
+
+/* Text Color Class Overrides */
+.dark .text-\[\#16211a\] {
+  color: var(--ink) !important;
+}
+
+.dark .text-\[\#4f6156\] {
+  color: var(--soft) !important;
+}
+
+/* Header dynamic bg */
+.dark header.sticky {
+  background-color: rgba(22, 33, 26, 0.95) !important;
+}
+
+/* Dark mode button styling override */
+.dark [class*="bg-[#16211a]"] {
+  background-color: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+.dark [class*="bg-[#16211a]"] svg {
+  fill: var(--paper) !important;
 }

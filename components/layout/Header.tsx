@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUIStore } from '@/lib/store/ui-store';
 import { MobileNav } from './MobileNav';
 
@@ -17,7 +17,14 @@ export function Header() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const rpgMode = useUIStore((s) => s.rpgModeEnabled);
   const toggleRPG = useUIStore((s) => s.toggleRPGMode);
+  const darkMode = useUIStore((s) => s.darkModeEnabled);
+  const toggleDark = useUIStore((s) => s.toggleDarkMode);
   const pathname = usePathname();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <>
@@ -67,6 +74,19 @@ export function Header() {
               aria-label="Toggle RPG Mode"
             >
               {rpgMode ? '⚔️ RPG' : '🎮 RPG'}
+            </button>
+
+            {/* Dark Mode toggle */}
+            <button
+              onClick={toggleDark}
+              className={`rounded-lg px-3 py-1.5 text-xs font-bold border-2 border-[#16211a] transition-all focus:outline-none focus:ring-2 focus:ring-[#1f6f4a] ${
+                mounted && darkMode
+                  ? 'bg-[#1f6f4a] text-white shadow-[0_2px_0_#16211a]'
+                  : 'bg-[#eef4ec] text-[#16211a] hover:bg-[#cbd8cf] shadow-[0_2px_0_#16211a]'
+              }`}
+              aria-label="Toggle Dark Mode"
+            >
+              {mounted && darkMode ? '☀️ Light' : '🌙 Dark'}
             </button>
 
             {/* Hamburger (mobile) */}
