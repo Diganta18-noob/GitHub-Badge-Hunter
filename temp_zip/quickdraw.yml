@@ -1,0 +1,33 @@
+name: Quickdraw Hunter
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Open issue
+        id: issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          URL=$(gh issue create \
+            --repo "$REPO" \
+            --title "bot: quickdraw $(date -u +'%H:%M:%S')" \
+            --body "Auto-opened for Quickdraw badge. Closing immediately.")
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "Opened: $URL"
+
+      - name: Close issue instantly
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue close "${{ steps.issue.outputs.url }}" \
+            --comment "Auto-closed for Quickdraw badge"
+          echo "Quickdraw badge triggered!"

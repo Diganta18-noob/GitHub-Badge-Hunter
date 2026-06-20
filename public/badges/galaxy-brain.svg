@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="46" fill="#eef4ec" stroke="#16211a" stroke-width="4" />
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#cbd8cf" stroke-width="1.5" stroke-dasharray="3,3" />
+  <!-- Brain Shape -->
+  <path d="M 32 52 C 24 52, 24 36, 34 32 C 38 22, 62 22, 66 32 C 76 36, 76 52, 68 52 C 76 57, 72 73, 62 73 C 58 78, 42 78, 38 73 C 28 73, 24 57, 32 52 Z" fill="#cbd8cf" stroke="#16211a" stroke-width="3" stroke-linejoin="round" />
+  <!-- Galaxy spiral inside brain -->
+  <path d="M 50 30 C 44 38, 44 48, 52 48 C 58 48, 58 40, 50 40 C 44 40, 40 46, 44 54 C 48 62, 60 62, 62 52" fill="none" stroke="#1f6f4a" stroke-width="3" stroke-linecap="round" />
+  <!-- Brain lobes details -->
+  <path d="M 32 52 C 38 52, 42 46, 46 48" fill="none" stroke="#16211a" stroke-width="2" />
+  <path d="M 68 52 C 62 52, 58 46, 54 48" fill="none" stroke="#16211a" stroke-width="2" />
+  <path d="M 50 30 L 50 24" fill="none" stroke="#16211a" stroke-width="2" />
+  <path d="M 50 73 L 50 78" fill="none" stroke="#16211a" stroke-width="2" />
+  <!-- Star twinkles -->
+  <path d="M 38 40 L 40 40 M 39 39 L 39 41" stroke="#1f6f4a" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M 62 60 L 64 60 M 63 59 L 63 61" stroke="#1f6f4a" stroke-width="1.5" stroke-linecap="round" />
+</svg>

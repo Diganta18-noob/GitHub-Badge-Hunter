@@ -1,0 +1,74 @@
+name: Pair Extraordinaire Hunter
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      coauthor_name:
+        description: 'Co-author GitHub username'
+        required: false
+        default: 'octocat'
+      coauthor_email:
+        description: 'Co-author email (username@users.noreply.github.com)'
+        required: false
+        default: 'octocat@users.noreply.github.com'
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup git
+        run: |
+          git config user.name "badge-bot[bot]"
+          git config user.email "badge-bot@users.noreply.github.com"
+
+      - name: Create co-authored commit
+        id: branch
+        run: |
+          TS=$(date +%s)
+          BRANCH="badge/pair-${TS}"
+          NAME="${{ github.event.inputs.coauthor_name || 'octocat' }}"
+          EMAIL="${{ github.event.inputs.coauthor_email || 'octocat@users.noreply.github.com' }}"
+
+          git checkout -b "$BRANCH"
+          mkdir -p logs
+          echo "$(date -u) | pair session with ${NAME}" >> logs/pair.log
+          git add .
+
+          git commit -m "bot: pair session $(date -u +'%Y-%m-%d %H:%M')
+
+          Co-authored-by: ${NAME} <${EMAIL}>"
+
+          git push origin "$BRANCH"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Open and merge PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          URL=$(gh pr create \
+            --title "bot: pair session $(date -u +'%Y-%m-%d %H:%M')" \
+            --body "Co-authored PR for Pair Extraordinaire badge" \
+            --base main \
+            --head "${{ steps.branch.outputs.branch }}")
+          gh pr merge "$URL" --merge --admin
+          echo "Pair Extraordinaire badge triggered!"
+
+      - name: Cleanup old pair branches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch --prune
+          OLD=$(git branch -r --list 'origin/badge/pair-*' \
+            | sed 's|origin/||' \
+            | head -n -3)
+          for b in $OLD; do
+            git push origin --delete "$b" 2>/dev/null || true
+          done

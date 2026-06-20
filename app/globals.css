@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Cream paper theme mappings */
+    --background: 108 20% 97%;          /* #f7f9f6 */
+    --foreground: 146 20% 11%;          /* #16211a */
+    
+    --card: 0 0% 100%;                  /* #ffffff */
+    --card-foreground: 146 20% 11%;     /* #16211a */
+    
+    --popover: 0 0% 100%;               /* #ffffff */
+    --popover-foreground: 146 20% 11%;  /* #16211a */
+    
+    --primary: 146 20% 11%;             /* #16211a */
+    --primary-foreground: 108 20% 97%;  /* #f7f9f6 */
+    
+    --secondary: 108 20% 94%;           /* #eef4ec */
+    --secondary-foreground: 146 20% 11%;/* #16211a */
+    
+    --muted: 108 20% 94%;               /* #eef4ec */
+    --muted-foreground: 146 10% 34%;    /* #4f6156 */
+    
+    --accent: 150 56% 28%;              /* #1f6f4a */
+    --accent-foreground: 0 0% 100%;     /* #ffffff */
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --border: 146 20% 11%;              /* #16211a (Thick dark border) */
+    --input: 146 20% 11%;               /* #16211a */
+    --ring: 150 56% 28%;                /* #1f6f4a */
+    
+    --radius: 6px;
+
+    /* Custom tokens */
+    --paper: #f7f9f6;
+    --ink: #16211a;
+    --soft: #4f6156;
+    --line: #cbd8cf;
+    --cream: #eef4ec;
+    --accent-color: #1f6f4a;
+    --accent2-color: #0f5c78;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[#16211a];
+  }
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-hanken), sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-bricolage), sans-serif;
+  }
+  code, pre, .mono-font {
+    font-family: var(--font-spline), monospace;
+  }
+}
+
+/* Custom premium aesthetic layouts matching Kolkata Travel Router */
+.news-header {
+  border-bottom: 3px solid var(--ink);
+  position: relative;
+  padding: 30px 0 22px;
+}
+
+.news-kicker {
+  font-family: var(--font-spline), monospace;
+  font-size: 11.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.news-title {
+  font-family: var(--font-bricolage), sans-serif;
+  font-weight: 800;
+  font-size: clamp(34px, 5.4vw, 58px);
+  line-height: 1;
+  letter-spacing: 0;
+  margin: 6px 0 10px;
+}
+
+.news-title em {
+  font-style: normal;
+  color: var(--accent-color);
+}
+
+.news-button-primary {
+  font-family: var(--font-spline), monospace;
+  background-color: var(--ink);
+  color: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 6px;
+  box-shadow: 0 4px 0 var(--ink);
+  transition: all .12s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+}
+
+.news-button-primary:hover {
+  background-color: var(--accent-color);
+  color: #fff;
+  transform: translateY(1px);
+  box-shadow: 0 3px 0 var(--ink);
+}
+
+.news-button-primary:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--ink);
+}
+
+.news-button-secondary {
+  font-family: var(--font-spline), monospace;
+  background-color: var(--card);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 6px;
+  box-shadow: 0 4px 0 var(--ink);
+  transition: all .12s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+}
+
+.news-button-secondary:hover {
+  background-color: var(--cream);
+  transform: translateY(1px);
+  box-shadow: 0 3px 0 var(--ink);
+}
+
+.news-button-secondary:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--ink);
+}
+
+.news-card {
+  background-color: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+
+.news-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.news-tag {
+  font-family: var(--font-spline), monospace;
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  font-weight: 700;
+}

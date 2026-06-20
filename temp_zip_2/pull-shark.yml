@@ -1,0 +1,66 @@
+name: Pull Shark + YOLO Hunter
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  hunt:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup git
+        run: |
+          git config user.name "badge-bot[bot]"
+          git config user.email "badge-bot@users.noreply.github.com"
+
+      - name: Create branch + commit
+        id: branch
+        run: |
+          TS=$(date +%s)
+          BRANCH="badge/pull-shark-${TS}"
+          git checkout -b "$BRANCH"
+          mkdir -p logs
+          echo "$(date -u) | pull-shark run #${TS}" >> logs/pull-shark.log
+          git add .
+          git commit -m "bot: pull-shark run at $(date -u +'%Y-%m-%d %H:%M')"
+          git push origin "$BRANCH"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Open PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          URL=$(gh pr create \
+            --title "bot: pull-shark $(date -u +'%Y-%m-%d %H:%M')" \
+            --body "Automated PR — Pull Shark + YOLO badge hunter" \
+            --base main \
+            --head "${{ steps.branch.outputs.branch }}")
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "Opened: $URL"
+
+      - name: Merge PR (no review = YOLO)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ steps.pr.outputs.url }}" --merge --admin
+          echo "Merged! +1 Pull Shark, YOLO badge triggered"
+
+      - name: Cleanup old branches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch --prune
+          OLD=$(git branch -r --list 'origin/badge/pull-shark-*' \
+            | sed 's|origin/||' \
+            | head -n -3)
+          for b in $OLD; do
+            git push origin --delete "$b" 2>/dev/null || true
+          done

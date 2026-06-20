@@ -1,0 +1,63 @@
+name: Badge Bot Master
+
+on:
+  schedule:
+    - cron: '0 * * * *'    # every hour
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Which badge to hunt'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - pull-shark
+          - quickdraw
+          - yolo
+          - pair-extraordinaire
+
+jobs:
+  route:
+    runs-on: ubuntu-latest
+    outputs:
+      run_pull_shark: ${{ steps.decide.outputs.run_pull_shark }}
+      run_quickdraw: ${{ steps.decide.outputs.run_quickdraw }}
+      run_pair: ${{ steps.decide.outputs.run_pair }}
+    steps:
+      - id: decide
+        run: |
+          TARGET="${{ github.event.inputs.target || 'all' }}"
+          if [[ "$TARGET" == "all" || "$TARGET" == "pull-shark" || "$TARGET" == "yolo" ]]; then
+            echo "run_pull_shark=true" >> $GITHUB_OUTPUT
+          else
+            echo "run_pull_shark=false" >> $GITHUB_OUTPUT
+          fi
+          if [[ "$TARGET" == "all" || "$TARGET" == "quickdraw" ]]; then
+            echo "run_quickdraw=true" >> $GITHUB_OUTPUT
+          else
+            echo "run_quickdraw=false" >> $GITHUB_OUTPUT
+          fi
+          if [[ "$TARGET" == "all" || "$TARGET" == "pair-extraordinaire" ]]; then
+            echo "run_pair=true" >> $GITHUB_OUTPUT
+          else
+            echo "run_pair=false" >> $GITHUB_OUTPUT
+          fi
+
+  pull-shark:
+    needs: route
+    if: needs.route.outputs.run_pull_shark == 'true'
+    uses: ./.github/workflows/pull-shark.yml
+    secrets: inherit
+
+  quickdraw:
+    needs: route
+    if: needs.route.outputs.run_quickdraw == 'true'
+    uses: ./.github/workflows/quickdraw.yml
+    secrets: inherit
+
+  pair-extraordinaire:
+    needs: route
+    if: needs.route.outputs.run_pair == 'true'
+    uses: ./.github/workflows/pair-extraordinaire.yml
+    secrets: inherit

@@ -1,0 +1,4 @@
+{
+    "code-runner.fileDirectoryAsCwd": true,
+    "accessibility.replEditor.autoFocusReplExecution": "lastExecution"
+}

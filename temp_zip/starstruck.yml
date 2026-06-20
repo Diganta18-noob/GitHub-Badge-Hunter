@@ -1,0 +1,40 @@
+name: Starstruck - Auto-update Showcase
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # daily update keeps repo fresh
+  workflow_dispatch:
+
+jobs:
+  update-showcase:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup git
+        run: |
+          git config user.name "badge-bot[bot]"
+          git config user.email "badge-bot@users.noreply.github.com"
+
+      - name: Refresh stats badge in README
+        run: |
+          TODAY=$(date -u +'%Y-%m-%d')
+          sed -i "s/Last updated: .*/Last updated: ${TODAY}/" README.md 2>/dev/null || true
+
+          if ! grep -q "Last updated:" README.md 2>/dev/null; then
+            echo -e "\n---\n*Last updated: ${TODAY}*" >> README.md
+          fi
+
+          git add README.md
+          git diff --staged --quiet || git commit -m "docs: refresh stats ${TODAY}"
+          git push || true
+
+      - name: Print star reminder
+        run: |
+          echo "Starstruck badge needs: 16 stars (Bronze), 128 (Silver), 512 (Gold)"
+          echo "Share your repo on: Reddit r/github, dev.to, Twitter, LinkedIn"
+          echo "Repo URL: https://github.com/${{ github.repository }}"

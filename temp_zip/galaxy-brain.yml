@@ -1,0 +1,47 @@
+name: Galaxy Brain Helper
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Target repo with Discussions (e.g. owner/repo)'
+        required: true
+      discussion_number:
+        description: 'Discussion number to answer'
+        required: true
+      answer:
+        description: 'Your answer text'
+        required: true
+
+jobs:
+  post-answer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post discussion answer via GraphQL
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REPO="${{ github.event.inputs.repo }}"
+          OWNER=$(echo $REPO | cut -d/ -f1)
+          REPONAME=$(echo $REPO | cut -d/ -f2)
+          DISC_NUM="${{ github.event.inputs.discussion_number }}"
+
+          DISC_ID=$(gh api graphql -f query='
+            query($owner: String!, $name: String!, $number: Int!) {
+              repository(owner: $owner, name: $name) {
+                discussion(number: $number) { id }
+              }
+            }' \
+            -f owner="$OWNER" -f name="$REPONAME" -F number=$DISC_NUM \
+            --jq '.data.repository.discussion.id')
+
+          gh api graphql -f query='
+            mutation($discussionId: ID!, $body: String!) {
+              addDiscussionComment(input: {discussionId: $discussionId, body: $body}) {
+                comment { id url }
+              }
+            }' \
+            -f discussionId="$DISC_ID" \
+            -f body="${{ github.event.inputs.answer }}"
+
+          echo "Posted answer! Ask the repo owner to mark it as accepted for Galaxy Brain."

@@ -1,0 +1,82 @@
+[debug] [2026-06-17T16:55:22.687Z] ----------------------------------------------------------------------
+[debug] [2026-06-17T16:55:22.689Z] Command:       C:\Program Files (x86)\node.exe C:\Users\digan\AppData\Local\npm-cache\_npx\ba4f1959e38407b5\node_modules\firebase-tools\lib\bin\firebase.js init dataconnect --project demo-no-project
+[debug] [2026-06-17T16:55:22.689Z] CLI Version:   15.20.0
+[debug] [2026-06-17T16:55:22.689Z] Platform:      win32
+[debug] [2026-06-17T16:55:22.689Z] Node Version:  v24.14.1
+[debug] [2026-06-17T16:55:22.690Z] Time:          Wed Jun 17 2026 22:25:22 GMT+0530 (India Standard Time)
+[debug] [2026-06-17T16:55:22.690Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-06-17T16:55:22.691Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Antigravity\badge hunter
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+
+[debug] [2026-06-17T16:54:51.747Z] ----------------------------------------------------------------------
+[debug] [2026-06-17T16:54:51.748Z] Command:       C:\Program Files (x86)\node.exe C:\Users\digan\AppData\Local\npm-cache\_npx\ba4f1959e38407b5\node_modules\firebase-tools\lib\bin\firebase.js init dataconnect --project demo-no-project
+[debug] [2026-06-17T16:54:51.749Z] CLI Version:   15.20.0
+[debug] [2026-06-17T16:54:51.749Z] Platform:      win32
+[debug] [2026-06-17T16:54:51.749Z] Node Version:  v24.14.1
+[debug] [2026-06-17T16:54:51.749Z] Time:          Wed Jun 17 2026 22:24:51 GMT+0530 (India Standard Time)
+[debug] [2026-06-17T16:54:51.749Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-06-17T16:54:51.751Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Antigravity\badge hunter
+
+Before we get started, keep in mind:
+
+  * You are currently outside your home directory
+
+[debug] [2026-06-17T16:55:24.979Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-06-17T16:55:24.979Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2026-06-17T16:55:25.025Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-06-17T16:55:25.025Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[info] Skipping Firebase project setup because a demo project is provided
+[info] 
+=== Dataconnect Setup
+[warn] !  dataconnect: Cannot detect an existing app in the current directory. 
+[info] i  dataconnect: > npx create-next-app@latest web-app --ts --eslint --tailwind --src-dir --app --turbopack --import-alias "@/*" --skip-install 
+[info] +  Wrote dataconnect\dataconnect.yaml 
+[info] +  Wrote dataconnect\seed_data.gql 
+[info] +  Wrote dataconnect\schema\schema.gql 
+[info] +  Wrote dataconnect\example\connector.yaml 
+[info] +  Wrote dataconnect\example\queries.gql 
+[info] +  Wrote dataconnect\example\mutations.gql 
+[info] +  Wrote dataconnect\example\connector.yaml 
+[info] i  dataconnect: Installing the generated SDKs ... 
+[info] i  dataconnect: downloading dataconnect-emulator-3.4.10.exe... {"metadata":{"emulator":{"name":"dataconnect"},"message":"downloading dataconnect-emulator-3.4.10.exe..."}}
+[debug] [2026-06-17T16:55:48.997Z] >>> [apiv2][query] GET https://storage.googleapis.com/firemat-preview-drop/emulator/dataconnect-emulator-windows-amd64-v3.4.10 
+[debug] [2026-06-17T16:55:49.473Z] <<< [apiv2][status] GET https://storage.googleapis.com/firemat-preview-drop/emulator/dataconnect-emulator-windows-amd64-v3.4.10 200
+[debug] [2026-06-17T16:55:49.473Z] <<< [apiv2][body] GET https://storage.googleapis.com/firemat-preview-drop/emulator/dataconnect-emulator-windows-amd64-v3.4.10 [stream]
+[info] i  dataconnect: Removing outdated emulator files: dataconnect-emulator-3.0.0.exe {"metadata":{"emulator":{"name":"dataconnect"},"message":"Removing outdated emulator files: dataconnect-emulator-3.0.0.exe"}}
+[debug] [2026-06-17T16:55:54.578Z] defaultcredentials: writing to file C:\Users\digan\AppData\Roaming\firebase\digantab_cse.jisu21_gmail.com_application_default_credentials.json
+[info] +  dataconnect: Installed generated SDKs for web-app (web) 
+[info] i  Visit https://firebase.google.com/docs/data-connect/web-sdk#react for more information on how to set up React Generated SDKs for Firebase SQL Connect 
+[info] 
+=== Agent Skills Setup
+[info] If you are using an AI coding agent, Firebase Agent Skills make it an expert at Firebase.

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="46" fill="#eef4ec" stroke="#16211a" stroke-width="4" />
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#cbd8cf" stroke-width="1.5" stroke-dasharray="3,3" />
+  <!-- Monitor Stand -->
+  <path d="M 45 64 L 55 64 L 60 74 L 40 74 Z" fill="#16211a" stroke="#16211a" stroke-width="2.5" stroke-linejoin="round" />
+  <!-- Monitor Outer Frame -->
+  <rect x="24" y="22" width="52" height="42" rx="6" fill="#cbd8cf" stroke="#16211a" stroke-width="3.5" />
+  <!-- Screen -->
+  <rect x="30" y="27" width="40" height="32" rx="2" fill="#16211a" />
+  <!-- Code Brackets -->
+  <text x="50" y="48" font-family="monospace" font-size="15" font-weight="950" text-anchor="middle" fill="#1f6f4a" dominant-baseline="central">&lt;/&gt;</text>
+</svg>

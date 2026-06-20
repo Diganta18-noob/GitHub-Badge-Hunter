@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://badge-hunter.vercel.app/api/sitemap

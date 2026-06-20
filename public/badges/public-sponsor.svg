@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="46" fill="#eef4ec" stroke="#16211a" stroke-width="4" />
+  <circle cx="50" cy="50" r="40" fill="none" stroke="#cbd8cf" stroke-width="1.5" stroke-dasharray="3,3" />
+  <!-- Heart -->
+  <path d="M 50 75 C 50 75, 18 52, 18 35 C 18 21, 33 16, 50 32 C 67 16, 82 21, 82 35 C 82 52, 50 75, 50 75 Z" fill="#1f6f4a" stroke="#16211a" stroke-width="3.5" stroke-linejoin="round" />
+  <!-- Coin in center of heart -->
+  <circle cx="50" cy="42" r="10" fill="#eef4ec" stroke="#16211a" stroke-width="2.5" />
+  <text x="50" y="46" font-family="monospace" font-size="12" font-weight="950" text-anchor="middle" fill="#16211a">$</text>
+</svg>
