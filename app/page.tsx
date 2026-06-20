@@ -87,19 +87,19 @@ export default function HomePage() {
         
         <div className="flex flex-wrap gap-4 mt-6 items-center">
           {/* People Checked Counter */}
-          <div className="inline-flex items-center gap-4 border-2 border-[#16211a] bg-[#f7f9f6] px-4 py-2 rounded-[6px] h-[52px] select-none shadow-[3px_3px_0_#16211a]">
-            <div className="flex flex-col justify-center leading-none font-mono text-[#16211a]">
-              <span className="text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#4f6156] whitespace-nowrap">PEOPLE CHECKED</span>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#16211a] whitespace-nowrap mt-0.5">PROFILES</span>
+          <div className="inline-flex items-center gap-4 border-2 border-[#16211a] dark:border-[var(--ink)] bg-[#f7f9f6] dark:bg-[var(--paper)] px-4 py-2 rounded-[6px] h-[52px] select-none shadow-[3px_3px_0_#16211a] dark:shadow-[3px_3px_0_var(--ink)]">
+            <div className="flex flex-col justify-center leading-none font-mono text-[#16211a] dark:text-[var(--ink)]">
+              <span className="text-[9px] font-extrabold uppercase tracking-[0.12em] text-[#4f6156] dark:text-[var(--soft)] whitespace-nowrap">PEOPLE CHECKED</span>
+              <span className="text-[11px] font-black uppercase tracking-wider text-[#16211a] dark:text-[var(--ink)] whitespace-nowrap mt-0.5">PROFILES</span>
             </div>
-            <div className="flex items-center gap-[1px] font-mono text-sm font-bold bg-[#16211a] p-0.5 rounded-[4px] border border-[#16211a] h-[32px]">
+            <div className="flex items-center gap-[1px] font-mono text-sm font-bold p-0.5 rounded-[4px] border h-[32px] news-counter-wrapper">
               {hits.toLocaleString().split('').map((char, index) => (
                 <span 
                   key={index} 
-                  className={`inline-flex items-center justify-center w-[16px] h-[26px] rounded-[2px] font-mono font-black text-xs ${
+                  className={`inline-flex items-center justify-center rounded-[2px] font-mono font-black text-xs ${
                     char === ',' 
-                      ? 'text-white/80 bg-transparent w-[8px]' 
-                      : 'bg-white text-[#16211a]'
+                      ? 'w-[8px] news-counter-comma' 
+                      : 'w-[16px] h-[26px] news-counter-digit'
                   }`}
                 >
                   {char}
@@ -113,15 +113,15 @@ export default function HomePage() {
             href="https://github.com/Diganta18-noob/badge2" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="group bg-[#16211a] text-white border-2 border-[#16211a] rounded-[6px] hover:bg-[#1f6f4a] hover:border-[#1f6f4a] flex items-center justify-center gap-2.5 font-mono text-xs font-extrabold uppercase px-5 h-[52px] transition-all whitespace-nowrap box-border shadow-[3px_3px_0_#16211a] hover:translate-y-[1px] hover:shadow-[2px_2px_0_#16211a] active:translate-y-[3px] active:shadow-none"
+            className="group bg-[#16211a] dark:bg-[var(--ink)] text-white dark:text-[var(--paper)] border-2 border-[#16211a] dark:border-[var(--ink)] rounded-[6px] hover:bg-[#1f6f4a] dark:hover:bg-[#26895b] hover:border-[#1f6f4a] dark:hover:border-[#26895b] flex items-center justify-center gap-2.5 font-mono text-xs font-extrabold uppercase px-5 h-[52px] transition-all whitespace-nowrap box-border shadow-[3px_3px_0_#16211a] dark:shadow-[3px_3px_0_var(--ink)] hover:translate-y-[1px] dark:hover:translate-y-[1px] hover:shadow-[2px_2px_0_#16211a] dark:hover:shadow-[2px_2px_0_var(--ink)] active:translate-y-[3px] active:shadow-none"
             style={{ textTransform: 'uppercase' }}
           >
-            <svg className="h-5 w-5 fill-white transition-transform group-hover:scale-110" viewBox="0 0 24 24">
+            <svg className="h-5 w-5 fill-white dark:fill-[var(--paper)] transition-transform group-hover:scale-110" viewBox="0 0 24 24">
               <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.138 20.197 22 16.44 22 12.017 22 6.484 17.522 2 12 2z" />
             </svg>
             <span>Star on GitHub</span>
             {stars !== null && (
-              <span className="bg-[#cbd8cf] text-[#16211a] rounded px-1.5 py-0.5 text-[10px] font-black ml-1 border border-[#16211a] group-hover:bg-white group-hover:text-[#1f6f4a] transition-colors">
+              <span className="bg-[#cbd8cf] dark:bg-[var(--paper)]/25 text-[#16211a] dark:text-[var(--paper)] rounded px-1.5 py-0.5 text-[10px] font-black ml-1 border border-[#16211a] dark:border-[var(--paper)]/50 group-hover:bg-white dark:group-hover:bg-[var(--paper)] group-hover:text-[#1f6f4a] dark:group-hover:text-[var(--ink)] transition-colors">
                 ★ {stars}
               </span>
             )}

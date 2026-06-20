@@ -217,7 +217,7 @@
   border-color: var(--ink) !important;
 }
 
-.dark [class*="border-\[\#cbd8cf\]"] {
+.dark [class*="border-[#cbd8cf]"] {
   border-color: var(--line) !important;
 }
 
@@ -250,24 +250,24 @@
   background-color: var(--card) !important;
 }
 
-.dark .bg-\[\#f7f9f6\] {
+.dark [class*="bg-[#f7f9f6]"] {
   background-color: var(--paper) !important;
 }
 
-.dark .bg-\[\#eef4ec\] {
+.dark [class*="bg-[#eef4ec]"] {
   background-color: var(--cream) !important;
 }
 
-.dark .bg-\[\#fdfaf2\] {
+.dark [class*="bg-[#fdfaf2]"] {
   background-color: #2b2210 !important;
 }
 
 /* Text Color Class Overrides */
-.dark .text-\[\#16211a\] {
+.dark [class*="text-[#16211a]"] {
   color: var(--ink) !important;
 }
 
-.dark .text-\[\#4f6156\] {
+.dark [class*="text-[#4f6156]"] {
   color: var(--soft) !important;
 }
 
@@ -284,4 +284,34 @@
 
 .dark [class*="bg-[#16211a]"] svg {
   fill: var(--paper) !important;
+}
+
+/* News Counter Classes */
+.news-counter-wrapper {
+  background-color: #16211a;
+  border-color: #16211a;
+}
+
+.dark .news-counter-wrapper {
+  background-color: var(--ink) !important;
+  border-color: var(--ink) !important;
+}
+
+.news-counter-digit {
+  background-color: #ffffff;
+  color: #16211a;
+}
+
+.dark .news-counter-digit {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+}
+
+.news-counter-comma {
+  color: rgba(255, 255, 255, 0.8);
+  background-color: transparent;
+}
+
+.dark .news-counter-comma {
+  color: rgba(22, 33, 26, 0.8) !important;
 }
