@@ -1,274 +1,48 @@
-name: "🤖 Badge Bot Master"
+name: Badge activity report (manual only)
 
-on:
-  schedule:
-    - cron: '0 */6 * * *'    # every 6 hours
+# No schedule, push trigger, child workflows, or badge-generating mutations.
+'on':
   workflow_dispatch:
     inputs:
-      run_all:
-        description: 'Run ALL badge hunters at once'
+      acknowledge_runner_usage:
+        description: 'Run one read-only report (uses one runner for at most 3 minutes)'
         type: boolean
-        default: true
-      send_report:
-        description: 'Send Telegram status report'
-        type: boolean
-        default: true
+        required: true
+        default: false
 
-# ═══════════════════════════════════════════════════
-# 🤖 BADGE BOT MASTER ORCHESTRATOR
-# Coordinates all badge hunting workflows and
-# sends live Telegram progress updates.
-#
-# Required Secrets:
-#   TELEGRAM_BOT_TOKEN  — from @BotFather
-#   TELEGRAM_CHAT_ID    — your chat/group ID
-#
-# Optional Secrets (for Pair Extraordinaire):
-#   PAIR_COAUTHOR_USERNAME — friend's GitHub username
-#   PAIR_COAUTHOR_EMAIL    — friend's noreply email
-# ═══════════════════════════════════════════════════
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
 
-env:
-  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+concurrency:
+  group: badge-report-${{ github.repository }}
+  cancel-in-progress: true
 
 jobs:
-  # ──────────────────────────────────────────────
-  # 0. START — Send "hunt started" notification
-  # ──────────────────────────────────────────────
-  notify-start:
+  report:
+    if: github.event_name == 'workflow_dispatch' && inputs.acknowledge_runner_usage
     runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      OWNER: ${{ github.repository_owner }}
     steps:
-      - name: Send start notification
-        if: env.TELEGRAM_BOT_TOKEN != ''
+      - name: Report observed repository activity
+        shell: bash
         run: |
-          MSG="🤖 *Badge Bot — Hunt Started*%0A"
-          MSG+="━━━━━━━━━━━━━━━━━━━━━━%0A"
-          MSG+="📅 $(date -u '+%Y-%m-%d %H:%M UTC')%0A"
-          MSG+="🔄 Run \#$GITHUB_RUN_NUMBER%0A"
-          MSG+="📦 Repo: \`${{ github.repository }}\`%0A"
-          MSG+="━━━━━━━━━━━━━━━━━━━━━━%0A"
-          MSG+="🎯 Hunting all badges...%0A"
-          MSG+="⚡ Turbo Mode: Pull Shark 4x/30min"
-          curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
-            -d chat_id="$TELEGRAM_CHAT_ID" \
-            -d text="$MSG" \
-            -d parse_mode="Markdown" || true
-
-  # ──────────────────────────────────────────────
-  # 1. QUICKDRAW — open+close issue instantly
-  # ──────────────────────────────────────────────
-  quickdraw:
-    needs: notify-start
-    if: always()
-    uses: ./.github/workflows/quickdraw.yml
-    permissions:
-      issues: write
-    secrets: inherit
-
-  # ──────────────────────────────────────────────
-  # 2. PULL SHARK + YOLO — auto PR & merge (TURBO)
-  # ──────────────────────────────────────────────
-  pull-shark:
-    needs: quickdraw
-    if: always()
-    uses: ./.github/workflows/pull-shark.yml
-    permissions:
-      contents: write
-      pull-requests: write
-    secrets: inherit
-
-  # ──────────────────────────────────────────────
-  # 3. PAIR EXTRAORDINAIRE — co-authored PRs
-  # ──────────────────────────────────────────────
-  pair-extraordinaire:
-    needs: pull-shark
-    if: always()
-    uses: ./.github/workflows/pair-extraordinaire.yml
-    permissions:
-      contents: write
-      pull-requests: write
-    secrets: inherit
-
-  # ──────────────────────────────────────────────
-  # 4. OPEN SOURCERER — PR to external repos
-  # ──────────────────────────────────────────────
-  open-sourcerer:
-    needs: pair-extraordinaire
-    if: always()
-    uses: ./.github/workflows/open-sourcerer.yml
-    permissions:
-      contents: write
-      issues: write
-    secrets: inherit
-
-  # ──────────────────────────────────────────────
-  # 5. HEART ON YOUR SLEEVE — react with ❤️
-  # ──────────────────────────────────────────────
-  heart-on-sleeve:
-    needs: notify-start
-    if: always()
-    uses: ./.github/workflows/heart-on-sleeve.yml
-    permissions:
-      contents: read
-      issues: write
-      pull-requests: write
-    secrets: inherit
-
-  # ──────────────────────────────────────────────
-  # 6. FINAL REPORT — Telegram summary
-  # ──────────────────────────────────────────────
-  final-report:
-    needs: [quickdraw, pull-shark, pair-extraordinaire, open-sourcerer, heart-on-sleeve]
-    if: always()
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-      issues: read
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Gather badge stats
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-        run: |
-          # Count merged PRs (Pull Shark progress)
-          MERGED_PRS=$(gh pr list --repo "$REPO" --state merged --limit 999 --json number | jq length)
-          echo "MERGED_PRS=$MERGED_PRS" >> $GITHUB_ENV
-
-          # Count pair PRs
-          PAIR_PRS=$(gh pr list --repo "$REPO" --state merged --search "Pair" --limit 999 --json number | jq length)
-          echo "PAIR_PRS=$PAIR_PRS" >> $GITHUB_ENV
-
-          # Count issues (Quickdraw check)
-          CLOSED_ISSUES=$(gh issue list --repo "$REPO" --state closed --limit 999 --json number | jq length)
-          echo "CLOSED_ISSUES=$CLOSED_ISSUES" >> $GITHUB_ENV
-
-          # Star count
-          STARS=$(gh api repos/$REPO --jq '.stargazers_count' 2>/dev/null || echo "0")
-          echo "STARS=$STARS" >> $GITHUB_ENV
-
-          # Fork count
-          FORKS=$(gh api repos/$REPO --jq '.forks_count' 2>/dev/null || echo "0")
-          echo "FORKS=$FORKS" >> $GITHUB_ENV
-
-      - name: Determine badge tiers
-        run: |
-          # Pull Shark tier
-          if [ "$MERGED_PRS" -ge 128 ]; then
-            PS_TIER="🥇 GOLD"
-          elif [ "$MERGED_PRS" -ge 16 ]; then
-            PS_TIER="🥈 SILVER"
-          elif [ "$MERGED_PRS" -ge 2 ]; then
-            PS_TIER="🥉 BRONZE"
-          else
-            PS_TIER="⏳ $MERGED_PRS/2"
-          fi
-          echo "PS_TIER=$PS_TIER" >> $GITHUB_ENV
-
-          # Pair Extraordinaire tier
-          if [ "$PAIR_PRS" -ge 24 ]; then
-            PE_TIER="🥇 GOLD"
-          elif [ "$PAIR_PRS" -ge 10 ]; then
-            PE_TIER="🥈 SILVER"
-          elif [ "$PAIR_PRS" -ge 1 ]; then
-            PE_TIER="🥉 BRONZE"
-          else
-            PE_TIER="⏳ $PAIR_PRS/1"
-          fi
-          echo "PE_TIER=$PE_TIER" >> $GITHUB_ENV
-
-          # Starstruck tier
-          if [ "$STARS" -ge 4096 ]; then
-            SS_TIER="💎 PLATINUM"
-          elif [ "$STARS" -ge 512 ]; then
-            SS_TIER="🥇 GOLD"
-          elif [ "$STARS" -ge 128 ]; then
-            SS_TIER="🥈 SILVER"
-          elif [ "$STARS" -ge 16 ]; then
-            SS_TIER="🥉 BRONZE"
-          else
-            SS_TIER="⏳ $STARS/16"
-          fi
-          echo "SS_TIER=$SS_TIER" >> $GITHUB_ENV
-
-          # Quickdraw
-          if [ "$CLOSED_ISSUES" -ge 1 ]; then
-            QD_STATUS="✅ EARNED"
-          else
-            QD_STATUS="⏳ pending"
-          fi
-          echo "QD_STATUS=$QD_STATUS" >> $GITHUB_ENV
-
-          # YOLO
-          if [ "$MERGED_PRS" -ge 1 ]; then
-            YOLO_STATUS="✅ EARNED"
-          else
-            YOLO_STATUS="⏳ pending"
-          fi
-          echo "YOLO_STATUS=$YOLO_STATUS" >> $GITHUB_ENV
-
-      - name: Send Telegram report
-        if: env.TELEGRAM_BOT_TOKEN != ''
-        run: |
-          MSG="🏆 *Badge Bot — Hunt Report*%0A"
-          MSG+="━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A"
-          MSG+="%0A"
-          MSG+="*🎯 AUTOMATABLE BADGES*%0A"
-          MSG+="━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A"
-          MSG+="⚡ Quickdraw: $QD_STATUS%0A"
-          MSG+="🤙 YOLO: $YOLO_STATUS%0A"
-          MSG+="🦈 Pull Shark: $PS_TIER ($MERGED_PRS PRs)%0A"
-          MSG+="   → Next: $([ $MERGED_PRS -lt 2 ] && echo '2 PRs' || ([ $MERGED_PRS -lt 16 ] && echo '16 PRs' || ([ $MERGED_PRS -lt 128 ] && echo '128 PRs' || echo 'MAX 🎉')))%0A"
-          MSG+="🔗 Pair Extraordinaire: $PE_TIER ($PAIR_PRS PRs)%0A"
-          MSG+="   → Next: $([ $PAIR_PRS -lt 1 ] && echo '1 PR' || ([ $PAIR_PRS -lt 10 ] && echo '10 PRs' || ([ $PAIR_PRS -lt 24 ] && echo '24 PRs' || echo 'MAX 🎉')))%0A"
-          MSG+="%0A"
-          MSG+="*📊 PROGRESS BADGES*%0A"
-          MSG+="━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A"
-          MSG+="⭐ Starstruck: $SS_TIER ($STARS ⭐)%0A"
-          MSG+="🧠 Galaxy Brain: ⚠️ Manual (answer Discussions)%0A"
-          MSG+="💖 Public Sponsor: ⚠️ Manual (\$1 sponsorship)%0A"
-          MSG+="🏅 Developer Program: ⚠️ Manual (free signup)%0A"
-          MSG+="🌐 Open Sourcerer: 🔄 Helper active%0A"
-          MSG+="❤️ Heart On Your Sleeve: 🔄 Auto (beta)%0A"
-          MSG+="%0A"
-          MSG+="*📈 REPO STATS*%0A"
-          MSG+="━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A"
-          MSG+="⭐ Stars: $STARS | 🍴 Forks: $FORKS%0A"
-          MSG+="📝 PRs Merged: $MERGED_PRS%0A"
-          MSG+="🔗 Pair PRs: $PAIR_PRS%0A"
-          MSG+="🔒 Issues Closed: $CLOSED_ISSUES%0A"
-          MSG+="%0A"
-          MSG+="*⏱️ Workflow Results*%0A"
-          MSG+="━━━━━━━━━━━━━━━━━━━━━━━━━━━━%0A"
-          MSG+="⚡ Quickdraw: ${{ needs.quickdraw.result }}%0A"
-          MSG+="🦈 Pull Shark: ${{ needs.pull-shark.result }}%0A"
-          MSG+="🔗 Pair Extraordinaire: ${{ needs.pair-extraordinaire.result }}%0A"
-          MSG+="🌐 Open Sourcerer: ${{ needs.open-sourcerer.result }}%0A"
-          MSG+="❤️ Heart: ${{ needs.heart-on-sleeve.result }}%0A"
-          MSG+="%0A"
-          MSG+="📅 $(date -u '+%Y-%m-%d %H:%M UTC') | Run \#$GITHUB_RUN_NUMBER"
-
-          curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
-            -d chat_id="$TELEGRAM_CHAT_ID" \
-            -d text="$MSG" \
-            -d parse_mode="Markdown" || true
-
-      - name: Console summary
-        run: |
-          echo "╔══════════════════════════════════════════╗"
-          echo "║        🏆 Badge Bot — Run Summary        ║"
-          echo "╠══════════════════════════════════════════╣"
-          echo "║ ⚡ Quickdraw:          $QD_STATUS"
-          echo "║ 🤙 YOLO:               $YOLO_STATUS"
-          echo "║ 🦈 Pull Shark:         $PS_TIER ($MERGED_PRS PRs)"
-          echo "║ 🔗 Pair Extraordinaire: $PE_TIER ($PAIR_PRS PRs)"
-          echo "║ ⭐ Starstruck:         $SS_TIER ($STARS stars)"
-          echo "║ ❤️ Heart:              Running"
-          echo "║ 📅 Time:               $(date -u)"
-          echo "║ 🔄 Run:                #$GITHUB_RUN_NUMBER"
-          echo "╚══════════════════════════════════════════╝"
+          set -euo pipefail
+          STARS=$(gh api "repos/$REPO" --jq '.stargazers_count')
+          MERGED=$(gh api --method GET search/issues \
+            -f "q=repo:$REPO is:pr is:merged" --jq '.total_count')
+          CLOSED=$(gh api --method GET search/issues \
+            -f "q=repo:$REPO is:issue is:closed" --jq '.total_count')
+          {
+            printf '%s\n' '# Repository activity report' ''
+            printf '| Metric | Observed count |\n| --- | ---: |\n'
+            printf '| Stars | %s |\n| Merged PRs | %s |\n| Closed issues | %s |\n' "$STARS" "$MERGED" "$CLOSED"
+            printf '\n%s\n' 'These are repository counts, not verified GitHub Achievement awards or account-wide progress.'
+            printf '\nCheck actual Achievements on [your profile](https://github.com/%s?tab=achievements).\n' "$OWNER"
+            printf '\n%s\n' 'Scheduled badge hunters are disabled. This report does not create or merge PRs, open issues, add reactions, push commits, or send messages.'
+          } >> "$GITHUB_STEP_SUMMARY"
