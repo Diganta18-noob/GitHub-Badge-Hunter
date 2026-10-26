@@ -1,12 +1,12 @@
 # Badge activity report
 
-This repository no longer runs automatic badge hunters. They generated repeated workflow runs, empty PR activity, repository log commits, and misleading achievement notifications.
+This repository runs one daily read-only report. The old automatic badge hunters remain inactive. They generated repeated workflow runs, empty PR activity, repository log commits, and misleading achievement notifications.
 
 ## Current behavior
 
-- **Automatic runs per day: 0.** No cron, push, pull-request, or chained workflow triggers.
-- **Manual report:** Actions → Badge activity report (manual only) → Run workflow → explicitly check `acknowledge_runner_usage`.
-- One read-only Ubuntu runner, with a 3-minute timeout and concurrency cancellation. Leaving the checkbox unchecked skips the job before a runner is allocated.
+- **Scheduled runs per day: 1**, at **08:00 IST / 02:30 UTC**. GitHub may delay scheduled starts. There are no push, pull-request, or chained workflow triggers.
+- **Manual report:** Actions → Badge activity report (daily) → Run workflow → explicitly check `acknowledge_runner_usage`.
+- One read-only Ubuntu runner, with a 3-minute timeout and concurrency cancellation. The daily schedule runs without manual input. Extra manual reports require the checkbox; leaving it unchecked skips the manual job before a runner is allocated.
 - The report shows repository stars, merged PRs, and closed issues. It does **not** claim these counts are verified achievement awards.
 - No PAT, Telegram token, write permission, synthetic PRs, automatic merges, issues, reactions, or repository log commits are required by the active workflow.
 

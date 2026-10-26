@@ -60,3 +60,7 @@ These changes prevent new scheduled badge runs. They do not refund used minutes,
 - [Viewing job execution time and billable minutes](https://docs.github.com/en/actions/how-tos/monitor-workflows/view-job-execution-time)
 - [Disabling and enabling workflows](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/disable-and-enable-workflows)
 - [GitHub profile Achievements](https://docs.github.com/en/account-and-profile/reference/profile-reference#earning-achievements)
+
+## Daily-report follow-up — 26 October 2026
+
+At the owner's request, the replacement read-only report now has exactly one daily schedule: `30 2 * * *` (02:30 UTC / 08:00 IST). The scheduled event is allowed by the job condition; an additional manual event still requires explicit runner-use acknowledgement. There is still only one bounded runner job, no hunter orchestration, and no repository mutations or messaging. Each of the two repositories requests one daily run, so the combined daily total is two. Earlier zero-schedule descriptions above document the initial remediation, superseded by this follow-up.

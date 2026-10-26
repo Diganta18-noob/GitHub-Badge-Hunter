@@ -5,14 +5,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 class WorkflowSafetyTests(unittest.TestCase):
-    def test_only_explicit_report_is_active(self):
+    def test_only_daily_report_is_active(self):
         active = sorted(p.name for p in (ROOT / '.github/workflows').glob('*.y*ml'))
         self.assertEqual(active, ['badge-bot.yml'])
 
-    def test_no_automatic_or_child_workflow_triggers(self):
+    def test_exactly_one_daily_schedule_and_no_child_triggers(self):
         source = (ROOT / '.github/workflows/badge-bot.yml').read_text(encoding='utf-8-sig')
         self.assertIn('workflow_dispatch:', source)
-        self.assertNotRegex(source, r'(?m)^  (schedule|push|pull_request|workflow_call|workflow_run|repository_dispatch):')
+        self.assertEqual(re.findall(r"cron:\s*'([^']+)'", source), ['30 2 * * *'])
+        self.assertIn("github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.acknowledge_runner_usage)", source)
+        self.assertNotRegex(source, r'(?m)^  (push|pull_request|workflow_call|workflow_run|repository_dispatch):')
         self.assertNotIn('uses: ./.github/workflows/', source)
         self.assertNotRegex(source, r'(?m)^\s+matrix:')
 

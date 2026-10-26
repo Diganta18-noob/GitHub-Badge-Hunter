@@ -1,7 +1,9 @@
-name: Badge activity report (manual only)
+name: Badge activity report (daily)
 
-# No schedule, push trigger, child workflows, or badge-generating mutations.
+# One daily read-only report at 08:00 IST (02:30 UTC). No child workflows or badge-generating mutations.
 'on':
+  schedule:
+    - cron: '30 2 * * *'
   workflow_dispatch:
     inputs:
       acknowledge_runner_usage:
@@ -21,7 +23,7 @@ concurrency:
 
 jobs:
   report:
-    if: github.event_name == 'workflow_dispatch' && inputs.acknowledge_runner_usage
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.acknowledge_runner_usage)
     runs-on: ubuntu-latest
     timeout-minutes: 3
     env:
