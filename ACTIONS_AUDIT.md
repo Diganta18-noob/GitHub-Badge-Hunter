@@ -42,7 +42,7 @@ The 300-run samples showed **19 actual top-level runs in each repository on 25 O
 
 ## Prepared remediation
 
-Application status: source changes are validated locally and proposed for review. The default-branch schedules have not yet been changed, and no live workflow has been disabled. Applying the fixes and any cancellation of active runs awaits the owner's approval.
+Application approved by the owner on 26 October 2026. All 20 legacy workflow records were disabled before applying the source fixes; neither repository had outstanding badge runs to cancel. Source changes are delivered through the reviewed pull requests, and only the manual read-only report is to be enabled after deployment verification.
 
 - Preserve nine old hunters outside `.github/workflows/`, where GitHub cannot execute them.
 - Replace the master with one manual-only, read-only report; require explicit runner-use acknowledgement before its sole job can start.
